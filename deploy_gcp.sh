@@ -59,9 +59,18 @@ gcloud services enable \
 
 # Build container image
 echo -e "${YELLOW}🏗️  Building container image...${NC}"
+
+# Check if Dockerfile exists
+if [ ! -f "Dockerfile" ]; then
+    echo -e "${RED}❌ Dockerfile not found in current directory!${NC}"
+    echo "Make sure you're in the project root directory"
+    exit 1
+fi
+
 gcloud builds submit \
     --tag gcr.io/$GCP_PROJECT_ID/$GCP_SERVICE_NAME \
-    --project=$GCP_PROJECT_ID
+    --project=$GCP_PROJECT_ID \
+    .
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Build failed!${NC}"
