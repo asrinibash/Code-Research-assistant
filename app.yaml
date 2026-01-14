@@ -1,0 +1,22 @@
+runtime: python311
+
+instance_class: F2
+
+env_variables:
+  GROQ_API_KEY: "your_groq_api_key_here"
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 0
+  max_instances: 10
+  min_pending_latency: 30ms
+  max_pending_latency: automatic
+  max_concurrent_requests: 80
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always
+  redirect_http_response_code: 301
+
+entrypoint: gunicorn -w 4 -k uvicorn.workers.UvicornWorker api:app --bind :$PORT --timeout 300
